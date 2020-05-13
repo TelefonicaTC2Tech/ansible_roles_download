@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging,os,sys, git
+import argparse
 
 '''
 This script requires the next python requirements:
@@ -32,21 +33,37 @@ def prepareLoggin():
 
 	rootLogger.setLevel(logging.INFO)
 
+def process_args():
+
+  parser = argparse.ArgumentParser(description='Download roles from an ansible-galaxy-style requirements file')
+
+
+  parser.add_argument('reqs_file',
+                      dest='config_file',
+                      action='store',
+                      type=str,
+                      required=False,
+					  default='requirements.yml'
+                      help='file paths with the requiremets to download')
+
+
+  return parser.parse_args()
 
 class DownloadRequirements():
 
-	def __init__(self):
+	def __init__(self, requirements_file):
 		'''Initializes class. '''
 		self.working_directory = os.path.dirname(os.path.realpath(__file__))
 		self.roles_directory = self.working_directory + "/roles"
 		self.script_name = os.path.basename(__file__)
+		self.requirements_file = requirements_file
 		logging.log(logging.DEBUG, self.working_directory)
 
 		self.read_config_file_yml()
 
 	def read_config_file_yml(self):
 		import yaml
-		fName = self.working_directory + "/requirements.yml"
+		fName = self.working_directory + str("/") + 
 		if os.path.exists(fName):
 			with open(fName, 'r') as stream:
 				try:
@@ -57,7 +74,7 @@ class DownloadRequirements():
 					exit(1)
 		else:
 			logging.log(logging.ERROR, "No file exists: " + fName + " aborting execution.")
-			logging.log(logging.ERROR, "A file named requirements.yml must exists along with " + self.script_name + ".")
+			# logging.log(logging.ERROR, "A file named requirements.yml must exists along with " + self.script_name + ".")
 			exit(1)
 
 	def create_directory(self,directory):
@@ -129,8 +146,9 @@ class DownloadRequirements():
 
 
 if __name__ == "__main__":
+	pargs = process_args()
 	prepareLoggin()
 	logging.log(logging.INFO, 'Starting download requirements...')
-	download = DownloadRequirements()
+	download = DownloadRequirements(pargs.config_file)
 	download.run()
 	exit(0)
