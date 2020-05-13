@@ -38,12 +38,12 @@ def process_args():
   parser = argparse.ArgumentParser(description='Download roles from an ansible-galaxy-style requirements file')
 
 
-  parser.add_argument('reqs_file',
-                      dest='config_file',
+  parser.add_argument('-r',
+                      dest='reqs_file',
                       action='store',
                       type=str,
                       required=False,
-					  default='requirements.yml'
+					  default='requirements.yml',
                       help='file paths with the requiremets to download')
 
 
@@ -149,6 +149,6 @@ if __name__ == "__main__":
 	pargs = process_args()
 	prepareLoggin()
 	logging.log(logging.INFO, 'Starting download requirements...')
-	download = DownloadRequirements(pargs.config_file)
+	download = DownloadRequirements(pargs.reqs_file)
 	download.run()
 	exit(0)
