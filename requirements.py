@@ -63,7 +63,7 @@ class DownloadRequirements():
 
 	def read_config_file_yml(self):
 		import yaml
-		fName = self.working_directory + str("/") + 
+		fName = self.working_directory + str("/") + self.requirements_file
 		if os.path.exists(fName):
 			with open(fName, 'r') as stream:
 				try:
